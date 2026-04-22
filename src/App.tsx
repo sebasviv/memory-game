@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import './App.scss'
 import { useAuth } from './hooks/context/AuthContext'
-import { Navigate, Route, Router, Routes } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import LoginPage from './pages/login-page/LoginPage';
+import RegisterPage from './pages/register-page/RegisterPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import HomePage from './pages/HomePage';
@@ -16,7 +16,7 @@ function App() {
   }
 
   return (
-     <Router location={''} navigator={undefined}>
+     <BrowserRouter>
       <Routes>
         <Route 
           path="/"
@@ -30,7 +30,7 @@ function App() {
           <Route path="/home" element={<HomePage />} />
         </Route>
       </Routes>
-    </Router>
+    </BrowserRouter>
   )
 }
 

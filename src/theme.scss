@@ -1,0 +1,190 @@
+// Paleta de Colores
+$color-primary: #00e5ff; // Azul brillante (inspirado en los portales de Rick y Morty)
+$color-secondary: #ff4081; // Rosa neón (inspirado en el estilo visual psicodélico)
+$color-background: #2d2d2d; // Fondo oscuro (para hacer resaltar los colores vibrantes)
+$color-text: #e4e4e4; // Texto claro (para contraste con el fondo oscuro)
+$color-muted: #8c8c8c; // Texto desactivado (gris oscuro)
+$color-border: #b5b5b5; // Borde gris claro
+$color-danger: #ff1744; // Rojo intenso (como los peligros en la serie)
+$color-success: #76ff03; // Verde neón (similar a los efectos de energía)
+$color-warning: #ffea00; // Amarillo brillante (como los destellos de las aventuras)
+
+// Tipografía
+$font-primary:
+  "Press Start 2P", sans-serif; // Tipografía pixelada retro, como un videojuego
+$font-secondary:
+  "Comic Sans MS", sans-serif; // Tipografía divertida y relajada, como la serie
+
+$font-size-base: 16px; // Tamaño base para el texto
+$font-size-small: 14px; // Tamaño pequeño para texto adicional
+$font-size-large: 22px; // Tamaño grande para títulos y encabezados
+
+$line-height-base: 1.5; // Interlineado base
+
+// Espaciado
+$spacing-xs: 8px; // Espaciado extra pequeño
+$spacing-sm: 16px; // Espaciado pequeño
+$spacing-md: 24px; // Espaciado medio
+$spacing-lg: 32px; // Espaciado grande
+$spacing-xl: 40px; // Espaciado extra grande
+
+$layout-x-padding: 200px; // Padding horizontal para el layout principal (ajustable para pantallas más pequeñas)
+
+// Border Radius
+$border-radius: 12px; // Radio de borde para botones, tarjetas, etc. (curvado más grande)
+$border-radius-lg: 20px; // Radio de borde grande para contenedores (más redondeado)
+
+// Sombra
+$box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); // Sombra suave para elementos
+$box-shadow-lg: 0 6px 15px rgba(0, 0, 0, 0.7); // Sombra más prominente
+
+// Breakpoints (tamaños para diseño adaptable)
+$breakpoint-xs: 480px; // Teléfonos pequeños
+$breakpoint-sm: 768px; // Tablets
+$breakpoint-md: 1024px; // Escritorios pequeños
+$breakpoint-lg: 1280px; // Pantallas grandes
+
+// Mixins para media queries
+@mixin media-xs {
+  @media (max-width: $breakpoint-xs) {
+    @content;
+  }
+}
+
+@mixin media-sm {
+  @media (max-width: $breakpoint-sm) {
+    @content;
+  }
+}
+
+@mixin media-md {
+  @media (max-width: $breakpoint-md) {
+    @content;
+  }
+}
+
+@mixin media-lg {
+  @media (max-width: $breakpoint-lg) {
+    @content;
+  }
+}
+
+// Global Styles
+body {
+  font-family: $font-primary;
+  font-size: $font-size-base;
+  color: $color-text;
+  background-color: $color-background;
+  line-height: $line-height-base;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $font-secondary;
+  color: $color-primary;
+  margin-top: $spacing-md;
+  margin-bottom: $spacing-sm;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); // Sombra para resaltar los títulos
+}
+
+button {
+  background-color: $color-primary;
+  color: white;
+  padding: $spacing-sm $spacing-md;
+  border: none;
+  border-radius: $border-radius;
+  cursor: pointer;
+  font-family: $font-secondary;
+
+  &:hover {
+    background-color: darken($color-primary, 10%);
+  }
+
+  &:active {
+    background-color: lighten($color-primary, 10%);
+  }
+}
+
+// Estilos de enlaces
+a {
+  color: $color-primary;
+  text-decoration: none;
+  font-family: $font-secondary;
+
+  &:hover {
+    text-decoration: underline;
+    color: $color-secondary;
+  }
+}
+
+// Contenedor principal
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+}
+
+// Etiqueta main
+main {
+  padding-left: $layout-x-padding;
+  padding-right: $layout-x-padding;
+}
+// Tarjetas
+.card {
+  background-color: #333333;
+  border: 2px solid $color-border;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+  color: $color-text;
+
+  @include media-xs {
+    padding: $spacing-sm;
+  }
+
+  &:hover {
+    box-shadow: $box-shadow-lg;
+  }
+}
+
+// Responsividad
+@include media-xs {
+  .container {
+    padding: 0 $spacing-sm;
+  }
+
+  h1 {
+    font-size: $font-size-large;
+  }
+
+  .card {
+    padding: $spacing-xs;
+  }
+}
+
+@include media-sm {
+  .container {
+    padding: 0 $spacing-sm;
+  }
+}
+
+@include media-md {
+  .container {
+    padding: 0 $spacing-md;
+  }
+}
+
+@include media-lg {
+  .container {
+    padding: 0 $spacing-lg;
+  }
+}
