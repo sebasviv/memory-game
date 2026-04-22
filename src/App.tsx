@@ -6,7 +6,8 @@ import LoginPage from './pages/login-page/LoginPage';
 import RegisterPage from './pages/register-page/RegisterPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
-import HomePage from './pages/HomePage';
+import HomePage from './pages/home-page/HomePage';
+import GamePage from './pages/Game/GamePage';
 
 function App() {
   const { isAuthenticated, loading } = useAuth();
@@ -28,6 +29,7 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/home" element={<HomePage />} />
+          <Route path="/game" element={<GamePage />} />
         </Route>
       </Routes>
     </BrowserRouter>
