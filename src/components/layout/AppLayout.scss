@@ -1,21 +1,21 @@
 @use '../../theme.scss' as *;
 
 .app-layout {
-	height: 100dvh;
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
-	overflow: hidden;
+	overflow: visible;
 
 	&__header {
-		position: sticky;
-		top: 0;
-		z-index: 100;
+		position: static;
 	}
 
 	&__main {
 		flex: 1;
-		min-height: 0;
-		overflow: hidden;
+		overflow: visible;
+	}
+
+	&__footer {
+		flex-shrink: 0;
 	}
 }

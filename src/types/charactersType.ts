@@ -11,6 +11,7 @@ export interface ICharacter {
   episode: string[];
   url: string;
   created: string;
+  isFlipped?: boolean;
 }
 
 interface ILocation {

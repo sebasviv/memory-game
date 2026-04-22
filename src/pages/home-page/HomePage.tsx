@@ -1,8 +1,6 @@
-import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import rickSanchez from '../../assets/rick_sanchez.svg'
 import './HomePage.scss'
-import Game from '../Game/GamePage'
 
 const HomePage = () => {
   const navigate = useNavigate()
