@@ -1,16 +1,30 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import rickSanchez from '../../assets/rick_sanchez.svg'
+import FilterGameContainer from '../../components/filter-game-container/FilterGameContainer'
 import './HomePage.scss'
 
 const HomePage = () => {
   const navigate = useNavigate()
+  const [countCards, setCountCards] = useState(4)
+  const [timeLimit, setTimeLimit] = useState(3)
+
   return (
     <div className="home-page">
       <div className="home-card">
         <img src={rickSanchez} alt="Rick Sanchez" className="home-card__hero" />
         <h1 className="home-card__title">Memory Game</h1>
         <p className="home-card__subtitle">¿Puedes vencer a Rick Sanchez?</p>
-        <button className="home-card__btn" onClick={() => navigate('/game')}>
+        <FilterGameContainer
+          countCards={countCards}
+          timeLimit={timeLimit}
+          onCountCardsChange={setCountCards}
+          onTimeLimitChange={setTimeLimit}
+        />
+        <button
+          className="home-card__btn"
+          onClick={() => navigate(`/game?countCards=${countCards}&timeLimit=${timeLimit}`)}
+        >
           ▶ Jugar
         </button>
       </div>

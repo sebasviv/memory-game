@@ -1,20 +1,23 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { generateRandomCharacters } from '../../services/charactersService'
 import type { ICharacter } from '../../types/charactersType'
 import Card from '../../components/card/Card'
 import './GamePage.scss'
 import { duplicateRandomCard, swapRandomCharacters } from '../../utils/functions'
 import Spinner from '../../components/spinner/Spinner'
-import Modal from '../../components/game/Modal'
+import Modal from '../../components/modal/Modal'
 
-interface IGamePageProps {
-    countCards: number,
-    timeLimit: number
-}
 
-const GamePage = ({ countCards = 4, timeLimit = 3 }: IGamePageProps) => {
+
+const GamePage = () => {
+
+
+    const [params] = useSearchParams();
+    const countCards = Number(params.get('countCards')) || 4;
+    const timeLimit = Number(params.get('timeLimit')) || 3;
+
     const [characters, setCharacters] = React.useState<ICharacter[]>([])
     const [isPlaying, setIsPlaying] = React.useState<boolean>(false)
     const [timeLeft, setTimeLeft] = React.useState<number | null>(timeLimit)
@@ -30,6 +33,8 @@ const GamePage = ({ countCards = 4, timeLimit = 3 }: IGamePageProps) => {
     const [spinnerMessage, setSpinnerMessage] = React.useState<string>('Cargando partida...')
     const [roundNumber, setRoundNumber] = React.useState<number>(1)
     const [showModalResults, setShowModalResults] = React.useState<boolean>(false)
+
+
 
     const handleGenerateRandomCharacters = async () => {
         try {
@@ -172,7 +177,6 @@ const GamePage = ({ countCards = 4, timeLimit = 3 }: IGamePageProps) => {
 
     //Controla cuando se inicia el juego
     useEffect(() => {
-        console.log("isPlaying")
         const startGame = async () => {
             handleGenerateRandomCharacters().then(() => {
                 onShuffleCards()

@@ -1,0 +1,196 @@
+@use '../../theme.scss' as *;
+
+.filter-game-panel {
+	position: relative;
+	width: min(100%, 42rem);
+	padding: clamp(1.25rem, 3vw, 2rem);
+	border: 2px solid rgba($color-primary, 0.55);
+	border-radius: $border-radius-lg;
+	background:
+		radial-gradient(circle at top left, rgba($color-primary, 0.2), transparent 42%),
+		radial-gradient(circle at bottom right, rgba($color-secondary, 0.22), transparent 38%),
+		linear-gradient(145deg, rgba(8, 16, 32, 0.96), rgba(15, 23, 42, 0.95));
+	box-shadow:
+		inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+		0 18px 38px rgba(0, 0, 0, 0.42),
+		0 0 26px rgba($color-primary, 0.18);
+	overflow: hidden;
+	isolation: isolate;
+
+	&::before,
+	&::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+
+	&::before {
+		background: repeating-linear-gradient(
+			180deg,
+			rgba(255, 255, 255, 0.05) 0 1px,
+			transparent 1px 6px
+		);
+		opacity: 0.3;
+		mix-blend-mode: screen;
+	}
+
+	&::after {
+		inset: 8px;
+		border: 1px solid rgba($color-primary, 0.2);
+		border-radius: calc(#{$border-radius-lg} - 6px);
+		box-shadow: inset 0 0 18px rgba($color-primary, 0.08);
+	}
+
+	&__header,
+	&__controls {
+		position: relative;
+		z-index: 1;
+	}
+
+	&__header {
+		margin-bottom: $spacing-md;
+	}
+
+	&__eyebrow {
+		margin: 0 0 $spacing-xs;
+		color: $color-warning;
+		font-size: 0.72rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		text-shadow: 0 0 12px rgba($color-warning, 0.4);
+	}
+
+	&__title {
+		margin: 0;
+		font-size: clamp(1.35rem, 3vw, 2rem);
+		line-height: 1.15;
+	}
+
+	&__subtitle {
+		margin: $spacing-sm 0 0;
+		max-width: 32rem;
+		font-family: $font-secondary;
+		color: rgba($color-text, 0.88);
+	}
+
+	&__controls {
+		display: grid;
+		gap: $spacing-md;
+	}
+
+	&__control {
+		display: grid;
+		gap: $spacing-xs;
+		padding: $spacing-sm;
+		border: 1px solid rgba($color-border, 0.2);
+		border-radius: $border-radius;
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
+			rgba(6, 10, 20, 0.5);
+		box-shadow: inset 0 0 0 1px rgba($color-primary, 0.08);
+	}
+
+	&__control-top {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: $spacing-sm;
+	}
+
+	&__label {
+		color: $color-text;
+		font-size: 0.78rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	&__value {
+		min-width: 4.5rem;
+		padding: 0.35rem 0.65rem;
+		border: 1px solid rgba($color-success, 0.45);
+		border-radius: 999px;
+		background: rgba($color-success, 0.12);
+		color: $color-success;
+		font-size: 0.8rem;
+		text-align: center;
+		text-shadow: 0 0 12px rgba($color-success, 0.35);
+		box-shadow: inset 0 0 10px rgba($color-success, 0.08);
+	}
+
+	&__slider {
+		width: 100%;
+		height: 0.7rem;
+		border-radius: 999px;
+		appearance: none;
+		background: linear-gradient(90deg, rgba($color-primary, 0.8), rgba($color-secondary, 0.72));
+		box-shadow:
+			inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+			0 0 14px rgba($color-primary, 0.18);
+		cursor: pointer;
+
+		&::-webkit-slider-thumb {
+			width: 1.25rem;
+			height: 1.25rem;
+			border: 2px solid rgba(255, 255, 255, 0.85);
+			border-radius: 50%;
+			appearance: none;
+			background: $color-background;
+			box-shadow:
+				0 0 0 4px rgba($color-primary, 0.25),
+				0 0 14px rgba($color-primary, 0.55);
+		}
+
+		&::-moz-range-thumb {
+			width: 1.25rem;
+			height: 1.25rem;
+			border: 2px solid rgba(255, 255, 255, 0.85);
+			border-radius: 50%;
+			background: $color-background;
+			box-shadow:
+				0 0 0 4px rgba($color-primary, 0.25),
+				0 0 14px rgba($color-primary, 0.55);
+		}
+
+		&:focus-visible {
+			outline: 2px solid rgba($color-warning, 0.75);
+			outline-offset: 0.25rem;
+		}
+	}
+
+	&__slider--secondary {
+		background: linear-gradient(90deg, rgba($color-warning, 0.82), rgba($color-secondary, 0.74));
+
+		&::-webkit-slider-thumb {
+			box-shadow:
+				0 0 0 4px rgba($color-warning, 0.22),
+				0 0 14px rgba($color-warning, 0.5);
+		}
+
+		&::-moz-range-thumb {
+			box-shadow:
+				0 0 0 4px rgba($color-warning, 0.22),
+				0 0 14px rgba($color-warning, 0.5);
+		}
+	}
+
+	&__help {
+		font-family: $font-secondary;
+		font-size: 0.88rem;
+		color: rgba($color-text, 0.72);
+	}
+
+	@include media-sm {
+		width: 100%;
+		padding: $spacing-sm;
+
+		&__control-top {
+			align-items: flex-start;
+			flex-direction: column;
+		}
+
+		&__value {
+			min-width: 0;
+		}
+	}
+}

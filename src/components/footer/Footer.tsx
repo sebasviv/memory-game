@@ -14,7 +14,7 @@ const Footer = () => {
 
       <div className="app-footer__meta">
         <span className="app-footer__badge">Rick &amp; Morty Vibes</span>
-        <span className="app-footer__copy">© {currentYear} Memory Game</span>
+        <span className="app-footer__copy">© {currentYear} Sebastian Viveros</span>
       </div>
     </footer>
   );

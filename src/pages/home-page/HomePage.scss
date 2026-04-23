@@ -44,7 +44,7 @@
     $box-shadow-lg;
   backdrop-filter: blur(12px);
   text-align: center;
-  max-width: 420px;
+  max-width: 56rem;
   width: 90%;
 
   &__hero {
@@ -71,10 +71,11 @@
     font-size: $font-size-small;
     color: $color-muted;
     margin: 0;
+    max-width: 32rem;
   }
 
   &__btn {
-    margin-top: $spacing-sm;
+    margin-top: $spacing-xs;
     padding: $spacing-sm $spacing-xl;
     font-family: $font-primary;
     font-size: $font-size-small;
@@ -102,6 +103,14 @@
       transform: scale(0.97);
       box-shadow: 0 0 8px rgba($color-primary, 0.5);
     }
+  }
+
+  .filter-game-panel {
+    width: min(100%, 40rem);
+  }
+
+  @include media-sm {
+    padding: $spacing-lg $spacing-sm;
   }
 }
 
