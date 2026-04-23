@@ -6,13 +6,18 @@ import type { ICharacter } from '../../types/charactersType'
 import Card from '../../components/card/Card'
 import './GamePage.scss'
 import { duplicateRandomCard, swapRandomCharacters } from '../../utils/functions'
-import Modal from '../../components/game/Modal'
 import Spinner from '../../components/spinner/Spinner'
+import Modal from '../../components/game/Modal'
 
-const GamePage = () => {
+interface IGamePageProps {
+    countCards: number,
+    timeLimit: number
+}
+
+const GamePage = ({ countCards = 4, timeLimit = 3 }: IGamePageProps) => {
     const [characters, setCharacters] = React.useState<ICharacter[]>([])
     const [isPlaying, setIsPlaying] = React.useState<boolean>(false)
-    const [timeLeft, setTimeLeft] = React.useState<number | null>(10)
+    const [timeLeft, setTimeLeft] = React.useState<number | null>(timeLimit)
     const [allFlipped, setAllFlipped] = React.useState<boolean>(false)
     const [cardsSelected, setCardsSelected] = React.useState<ICharacter[]>([])
     const [attempts, setAttempts] = React.useState<number>(0)
@@ -20,16 +25,16 @@ const GamePage = () => {
     const [showWinnerAnimation, setShowWinnerAnimation] = React.useState<boolean>(false)
     const [showLoserAnimation, setShowLoserAnimation] = React.useState<boolean>(false)
     const [showNextRoundAnimation, setShowNextRoundAnimation] = React.useState<boolean>(false)
-    const [showModal, setShowModal] = React.useState<boolean>(false)
-    const [timeLimit, setTimeLimit] = React.useState<number>(5)
     const [isCardsBlocked, setIsCardsBlocked] = React.useState<boolean>(false)
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
     const [spinnerMessage, setSpinnerMessage] = React.useState<string>('Cargando partida...')
+    const [roundNumber, setRoundNumber] = React.useState<number>(1)
+    const [showModalResults, setShowModalResults] = React.useState<boolean>(false)
 
     const handleGenerateRandomCharacters = async () => {
         try {
             const data = await generateRandomCharacters()
-            const dataSlice = data.slice(0, 9)
+            const dataSlice = data.slice(0, countCards / 2)
             const charactersWithFlipState = dataSlice.map((character: ICharacter) => ({
                 ...character,
                 isFlipped: false,
@@ -37,6 +42,7 @@ const GamePage = () => {
             const shuffledCharacters = duplicateRandomCard(charactersWithFlipState)
             if (shuffledCharacters && shuffledCharacters.length > 0) {
                 setCharacters(shuffledCharacters)
+                setAllFlipped(true)
             }
 
         } catch (error) {
@@ -66,7 +72,12 @@ const GamePage = () => {
     }
 
     const handleEndGame = () => {
+        setShowModalResults(true)
+    }
+
+    const handlePlayAgain = async () => {
         onResetGame()
+        await handleGenerateRandomCharacters()
     }
 
     const onWinner = async () => {
@@ -74,13 +85,10 @@ const GamePage = () => {
         setIsCardsBlocked(true)
         setScore((prev) => prev + 100)
         setTimeout(() => {
-            toggleAllCards(false)
+            handleDeletePairCards()
             onInitDataGame()
+            setIsCardsBlocked(false)
         }, 2000)
-
-        setTimeout(() => {
-            setShowModal(true)
-        }, 3000)
     }
 
     const onLoser = () => {
@@ -103,25 +111,36 @@ const GamePage = () => {
     }
 
     const onResetGame = () => {
-        setShowModal(false)
         setIsPlaying(false)
         setIsCardsBlocked(false)
         setAllFlipped(false)
         setScore(0)
         setAttempts(0)
+        setRoundNumber(1)
         onInitDataGame()
+        setShowModalResults(false)
     }
 
     const onNextRound = () => {
-        setShowModal(false);
+        onInitDataGame()
+        setAttempts(0)
+        setRoundNumber((prev) => prev + 1)
         setShowNextRoundAnimation(true);
         handleGenerateRandomCharacters().then(() => {
-            onShuffleCards();
+            setAllFlipped(false);
             setIsCardsBlocked(true);
             setTimeLeft(timeLimit);
             startTime();
         });
     };
+
+    const handleDeletePairCards = () => {
+        const [firstCard, secondCard] = cardsSelected
+        const updatedCharacters = characters.filter(
+            (c) => c.id !== firstCard.id && c.id !== secondCard.id
+        )
+        setCharacters(updatedCharacters)
+    }
 
     const onShuffleCards = () => {
         const shuffledCharacters = swapRandomCharacters(characters)
@@ -153,6 +172,7 @@ const GamePage = () => {
 
     //Controla cuando se inicia el juego
     useEffect(() => {
+        console.log("isPlaying")
         const startGame = async () => {
             handleGenerateRandomCharacters().then(() => {
                 onShuffleCards()
@@ -175,13 +195,6 @@ const GamePage = () => {
             setTimeLeft(timeLimit)
         }
     }, [isPlaying])
-
-
-    //monitoriza los personajes
-    // useEffect(() => {
-    //     console.log("characters: ", characters)
-    // }, [characters])
-
 
     //Controla la logica de ganar o perder
     useEffect(() => {
@@ -210,6 +223,7 @@ const GamePage = () => {
     }, [timeLeft, isPlaying, allFlipped, toggleAllCards])
 
 
+
     return (
         <section className='game-page'>
             <Link to='/home' className='game-page__back-button'>
@@ -218,10 +232,35 @@ const GamePage = () => {
                 </span>
                 <span>Volver</span>
             </Link>
+            {isPlaying && (
+                <div className='game-bar'>
+                    <div className='game-page__score' aria-live='polite'>
+                        <span className='game-page__score-label'>Puntuacion</span>
+                        <span className='game-page__score-value'>{score}</span>
+                    </div>
+                    <div className='game-page__round' aria-live='polite'>
+                        <span className='game-page__round-label'>Round</span>
+                        <span className='game-page__round-value'>{roundNumber}</span>
+                    </div>
+                    <div className='game-page__attempts' aria-live='polite'>
+                        <span className='game-page__attempts-title'>Intentos:</span>
+                        <span className='game-page__attempts-value'>{attempts}</span>
+                    </div>
 
-
+                    {isPlaying && timeLeft !== null && timeLeft > 0 && (
+                        <div className='game-page__timer' aria-live='polite'>
+                            <span className='game-page__timer-icon' aria-hidden='true'>
+                                <svg viewBox='0 0 24 24' focusable='false' aria-hidden='true'>
+                                    <circle cx='12' cy='12' r='9' />
+                                    <path d='M12 7v5l3 2' />
+                                </svg>
+                            </span>
+                            <span className='game-page__timer-value'>{timeLeft}s</span>
+                        </div>
+                    )}
+                </div>
+            )}
             <div className='game-page__board'>
-
                 {showWinnerAnimation && (
                     <div className='game-page__winner-overlay' aria-live='polite'>
                         <span className='game-page__winner-text'>Bien Hecho!</span>
@@ -240,65 +279,57 @@ const GamePage = () => {
                     </div>
                 )}
 
-                {isPlaying && (
-                    <>
-                        <div className='game-page__score' aria-live='polite'>
-                            <span className='game-page__score-label'>Puntuacion</span>
-                            <span className='game-page__score-value'>{score}</span>
+
+                <div
+                    className={`game-page__grid ${isPlaying && !isLoading && characters.length === 0 ? 'game-page__grid--finished' : ''}`}
+                >
+                    {isPlaying && !isLoading && characters.length === 0 ? (
+                        <div className='game-page__finished-container'>
+                            <div className='game-page__finished-message' aria-live='polite'>
+                                Has terminado
+                            </div>
+                            <button
+                                type='button'
+                                className='game-page__next-round-button'
+                                onClick={onNextRound}
+                            >
+                                Siguiente ronda
+                            </button>
                         </div>
-                        <div className='game-page__attempts' aria-live='polite'>
-                            <span className='game-page__attempts-title'>Intentos:</span>
-                            <span className='game-page__attempts-value'>{attempts}</span>
-                        </div>
-                    </>
-
-                )}
-
-                {isPlaying && timeLeft !== null && timeLeft > 0 && (
-                    <div className='game-page__timer' aria-live='polite'>
-                        <span className='game-page__timer-icon' aria-hidden='true'>
-                            <svg viewBox='0 0 24 24' focusable='false' aria-hidden='true'>
-                                <circle cx='12' cy='12' r='9' />
-                                <path d='M12 7v5l3 2' />
-                            </svg>
-                        </span>
-                        <span className='game-page__timer-value'>{timeLeft}s</span>
-                    </div>
-                )}
-
-                <div className='game-page__grid'>
-                    {characters.map((character) => (
-                        <Card
-                            key={character.id}
-                            character={character}
-                            isFlipped={character.isFlipped}
-                            onClick={() => { onSelectCard(character) }}
-                            disabled={isCardsBlocked}
-                        />
-                    ))}
+                    ) : (
+                        characters.map((character) => (
+                            <Card
+                                key={character.id}
+                                character={character}
+                                isFlipped={character.isFlipped}
+                                onClick={() => { onSelectCard(character) }}
+                                disabled={isCardsBlocked}
+                            />
+                        ))
+                    )}
                 </div>
-                {isPlaying ? (
-                    <div className='game-page__actions'>
-                        <button type='button' className='game-page__play-button' onClick={handleEndGame}>
-                            Terminar juego!
-                        </button>
-                    </div>
-                ) : (
-                    <div className='game-page__actions'>
-                        <button type='button' className='game-page__play-button' onClick={handlePlay}>
-                            Jugar!
-                        </button>
-                    </div>
-                )}
-
             </div>
+            {isPlaying ? (
+                <div className='game-page__actions'>
+                    <button type='button' className='game-page__play-button' onClick={handleEndGame}>
+                        Terminar juego!
+                    </button>
+                </div>
+            ) : (
+                <div className='game-page__actions'>
+                    <button type='button' className='game-page__play-button' onClick={handlePlay}>
+                        Jugar!
+                    </button>
+                </div>
+            )}
 
 
             {isLoading && <Spinner message={spinnerMessage} fullscreen />}
             <Modal
-                isOpen={showModal}
-                onNextRound={onNextRound}
-                onEndGame={handleEndGame}
+                isOpen={showModalResults}
+                score={score}
+                attempts={attempts}
+                onPlayAgain={handlePlayAgain}
             />
         </section>
     )

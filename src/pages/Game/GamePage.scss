@@ -1,6 +1,7 @@
 @use '../../theme.scss' as *;
 
 .game-page {
+	--game-grid-max-width: calc((220px * 3) + (1rem * 2));
 	width: 100%;
 	padding: 2rem;
 	display: flex;
@@ -29,10 +30,99 @@
 
 .game-page__grid {
 	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 190px));
+	grid-template-columns: repeat(3, minmax(0, 220px));
+	grid-auto-rows: 290px;
 	gap: 1rem;
-	margin-top: 0.75rem;
+	margin-top: 1.6rem;
 	justify-content: center;
+	min-height: 596px;
+}
+
+.game-page__grid--finished {
+	min-height: 596px;
+	align-content: center;
+}
+
+.game-page__finished-message {
+	grid-column: 1 / -1;
+	justify-self: center;
+	align-self: center;
+	width: min(100%, 32rem);
+	padding: 1rem 1.35rem;
+	border: 2px solid rgba(250, 204, 21, 0.9);
+	border-radius: 0.9rem;
+	text-align: center;
+	font-size: clamp(1.05rem, 2vw, 1.45rem);
+	font-weight: 900;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: #fff6cc;
+	background:
+		radial-gradient(circle at 20% 20%, rgba(250, 204, 21, 0.35), transparent 45%),
+		radial-gradient(circle at 80% 80%, rgba(251, 146, 60, 0.26), transparent 50%),
+		linear-gradient(160deg, rgba(24, 36, 58, 0.95), rgba(10, 16, 31, 0.98));
+	box-shadow:
+		0 0 0 2px rgba(250, 204, 21, 0.18),
+		0 14px 28px rgba(0, 0, 0, 0.45),
+		0 0 24px rgba(250, 204, 21, 0.35);
+	text-shadow:
+		0 0 10px rgba(250, 204, 21, 0.7),
+		0 0 18px rgba(245, 158, 11, 0.55);
+	animation: finished-message-enter 420ms cubic-bezier(0.2, 0.95, 0.4, 1) both,
+		finished-message-glow 1400ms ease-in-out infinite;
+	position: relative;
+	overflow: hidden;
+
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: repeating-linear-gradient(
+			-45deg,
+			rgba(250, 204, 21, 0.08) 0 8px,
+			rgba(250, 204, 21, 0.02) 8px 16px
+		);
+		pointer-events: none;
+	}
+}
+
+.game-page__finished-container {
+	grid-column: 1 / -1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1.2rem;
+}
+
+.game-page__next-round-button {
+	padding: 0.75rem 2rem;
+	border: 2px solid rgba(16, 185, 129, 0.6);
+	border-radius: 999px;
+	background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.15));
+	color: #fff;
+	font-size: 0.95rem;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	box-shadow: 
+		0 0 16px rgba(16, 185, 129, 0.25),
+		inset 0 0 0 1px rgba(16, 185, 129, 0.3);
+	
+	&:hover {
+		border-color: rgba(16, 185, 129, 0.9);
+		background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(6, 182, 212, 0.25));
+		box-shadow: 
+			0 0 24px rgba(16, 185, 129, 0.4),
+			inset 0 0 0 1px rgba(16, 185, 129, 0.5);
+		transform: translateY(-2px);
+	}
+	
+	&:focus-visible {
+		outline: 2px solid rgba(16, 185, 129, 0.6);
+		outline-offset: 2px;
+	}
 }
 
 .game-page__card-slot {
@@ -40,10 +130,9 @@
 }
 
 .game-page__board {
-	width: 100%;
-	max-width: 680px;
+	width: min(100%, var(--game-grid-max-width));
 	padding: $spacing-md;
-	padding-top: calc(#{$spacing-md} + 4.5rem);
+	padding-top: $spacing-md;
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -56,28 +145,114 @@
 	box-shadow: $box-shadow-lg;
 }
 
+.game-bar {
+	position: relative;
+	width: min(100%, var(--game-grid-max-width));
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	align-items: stretch;
+	gap: 0.72rem;
+	padding: 0.85rem;
+	margin-bottom: clamp(1rem, 2.2vw, 1.5rem);
+	border: 2px solid rgba(94, 234, 212, 0.55);
+	border-radius: 1rem;
+	background:
+		linear-gradient(145deg, rgba(8, 16, 32, 0.96), rgba(4, 10, 23, 0.98)),
+		radial-gradient(circle at 8% 30%, rgba(14, 116, 144, 0.35), transparent 48%),
+		radial-gradient(circle at 92% 75%, rgba(59, 130, 246, 0.28), transparent 45%);
+	box-shadow:
+		inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+		inset 0 -10px 24px rgba(15, 23, 42, 0.42),
+		0 14px 28px rgba(0, 0, 0, 0.4),
+		0 0 26px rgba(45, 212, 191, 0.25);
+	overflow: hidden;
+	isolation: isolate;
+	animation: game-bar-idle-glow 2600ms ease-in-out infinite;
+
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background:
+			linear-gradient(90deg, transparent 0%, rgba(45, 212, 191, 0.26) 48%, transparent 100%),
+			repeating-linear-gradient(
+				180deg,
+				rgba(148, 163, 184, 0.07) 0 1px,
+				transparent 1px 5px
+			);
+		mix-blend-mode: screen;
+		opacity: 0.42;
+		animation: game-bar-scanline 3800ms linear infinite;
+		pointer-events: none;
+		z-index: 1;
+	}
+
+	&::after {
+		content: '';
+		position: absolute;
+		inset: 6px;
+		border: 1px solid rgba(103, 232, 249, 0.36);
+		border-radius: 0.75rem;
+		box-shadow:
+			0 0 0 1px rgba(14, 165, 233, 0.2),
+			inset 0 0 10px rgba(125, 211, 252, 0.14);
+		pointer-events: none;
+		z-index: 0;
+	}
+
+	> * {
+		position: relative;
+		z-index: 2;
+	}
+}
+
+@keyframes game-bar-idle-glow {
+	0%,
+	100% {
+		box-shadow:
+			inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+			inset 0 -10px 24px rgba(15, 23, 42, 0.42),
+			0 14px 28px rgba(0, 0, 0, 0.4),
+			0 0 20px rgba(45, 212, 191, 0.18);
+	}
+
+	50% {
+		box-shadow:
+			inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+			inset 0 -10px 24px rgba(15, 23, 42, 0.42),
+			0 16px 30px rgba(0, 0, 0, 0.45),
+			0 0 34px rgba(45, 212, 191, 0.32);
+	}
+}
+
+@keyframes game-bar-scanline {
+	0% {
+		transform: translateX(-62%);
+	}
+
+	100% {
+		transform: translateX(62%);
+	}
+}
+
 .game-page__score {
-	position: absolute;
-	top: calc(#{$spacing-md} - 0.2rem);
-	left: 50%;
-	transform: translateX(-50%);
-	z-index: 12;
-	min-width: 160px;
-	padding: 0.45rem 1rem 0.5rem;
+	position: relative;
+	min-height: 72px;
+	padding: 0.55rem 0.75rem;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 0.1rem;
-	border: 1px solid rgba($color-secondary, 0.45);
+	justify-content: center;
+	gap: 0.2rem;
+	border: 1px solid rgba($color-secondary, 0.38);
 	border-radius: 0.8rem;
 	background:
-		linear-gradient(180deg, rgba($color-primary, 0.2), rgba(7, 15, 26, 0.96)),
+		linear-gradient(180deg, rgba($color-primary, 0.22), rgba(7, 15, 26, 0.96)),
 		rgba(7, 15, 26, 0.88);
 	box-shadow:
-		0 12px 24px rgba(0, 0, 0, 0.28),
-		0 0 14px rgba($color-secondary, 0.28),
+		0 6px 16px rgba(0, 0, 0, 0.25),
+		0 0 14px rgba($color-secondary, 0.2),
 		inset 0 0 0 1px rgba($color-text, 0.06);
-	backdrop-filter: blur(8px);
 }
 
 .game-page__score-label {
@@ -97,6 +272,39 @@
 	text-shadow:
 		0 0 8px rgba($color-secondary, 0.45),
 		0 0 16px rgba($color-primary, 0.35);
+}
+
+.game-page__round {
+	position: relative;
+	min-height: 72px;
+	padding: 0.55rem 0.75rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0.4rem;
+	border: 1px solid rgba(250, 204, 21, 0.45);
+	border-radius: 0.8rem;
+	background:
+		radial-gradient(circle at 70% 20%, rgba(250, 204, 21, 0.18), transparent 55%),
+		rgba(7, 15, 26, 0.86);
+	box-shadow:
+		0 6px 16px rgba(0, 0, 0, 0.25),
+		0 0 18px rgba(250, 204, 21, 0.2);
+}
+
+.game-page__round-label {
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: rgba($color-text, 0.7);
+}
+
+.game-page__round-value {
+	font-size: 1rem;
+	font-weight: 800;
+	color: $color-text;
+	text-shadow: 0 0 10px rgba(250, 204, 21, 0.45);
 }
 
 .game-page__winner-overlay {
@@ -299,34 +507,66 @@
 	}
 }
 
+@keyframes finished-message-enter {
+	0% {
+		opacity: 0;
+		transform: translateY(10px) scale(0.9);
+	}
+
+	70% {
+		opacity: 1;
+		transform: translateY(0) scale(1.04);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+@keyframes finished-message-glow {
+	0%,
+	100% {
+		box-shadow:
+			0 0 0 2px rgba(250, 204, 21, 0.18),
+			0 14px 28px rgba(0, 0, 0, 0.45),
+			0 0 18px rgba(250, 204, 21, 0.22);
+	}
+
+	50% {
+		box-shadow:
+			0 0 0 2px rgba(250, 204, 21, 0.32),
+			0 16px 34px rgba(0, 0, 0, 0.5),
+			0 0 34px rgba(250, 204, 21, 0.5);
+	}
+}
+
 .game-page__timer {
-	position: absolute;
-	top: $spacing-md;
-	right: $spacing-md;
-	display: inline-flex;
+	position: relative;
+	min-height: 72px;
+	display: flex;
+	justify-content: center;
 	align-items: center;
 	gap: 0.6rem;
-	padding: 0.65rem 1rem;
+	padding: 0.55rem 0.75rem;
 	border: 1px solid rgba($color-secondary, 0.35);
-	border-radius: 999px;
+	border-radius: 0.8rem;
 	background: rgba(7, 15, 26, 0.82);
-	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
-	backdrop-filter: blur(8px);
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
 .game-page__attempts {
-	position: absolute;
-	top: $spacing-md;
-	left: $spacing-md;
-	display: inline-flex;
+	position: relative;
+	min-height: 72px;
+	display: flex;
+	justify-content: center;
 	align-items: center;
 	gap: 0.45rem;
-	padding: 0.65rem 1rem;
+	padding: 0.55rem 0.75rem;
 	border: 1px solid rgba($color-primary, 0.35);
-	border-radius: 999px;
+	border-radius: 0.8rem;
 	background: rgba(7, 15, 26, 0.82);
-	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
-	backdrop-filter: blur(8px);
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
 .game-page__attempts-title {
@@ -370,6 +610,7 @@
 }
 
 .game-page__actions {
+	margin-top: 1.5rem;
 	display: flex;
 	justify-content: center;
 }
@@ -399,7 +640,13 @@
 
 @media (max-width: 640px) {
 	.game-page__board {
-		padding-top: calc(#{$spacing-md} + 5rem);
+		padding-top: $spacing-md;
+	}
+
+	.game-bar {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.55rem;
+		padding: 0.65rem;
 	}
 
 	.game-page__score {
@@ -409,5 +656,23 @@
 
 	.game-page__score-value {
 		font-size: 1.2rem;
+	}
+
+	.game-page__round {
+		gap: 0.3rem;
+	}
+
+	.game-page__round-label {
+		font-size: 0.72rem;
+	}
+
+	.game-page__round-value {
+		font-size: 0.9rem;
+	}
+
+	.game-page__finished-message {
+		font-size: 1rem;
+		letter-spacing: 0.09em;
+		padding: 0.85rem 1rem;
 	}
 }

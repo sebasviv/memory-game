@@ -31,8 +31,42 @@
     #0f1f33;
   box-shadow:
     0 0 0 1px rgba($color-secondary, 0.22),
-    0 25px 60px rgba(0, 0, 0, 0.5);
+    0 25px 60px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba($color-primary, 0.2),
+    inset 0 0 20px rgba($color-primary, 0.08);
   animation: game-modal-pop 280ms ease-out;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba($color-primary, 0.02) 2px,
+      rgba($color-primary, 0.02) 4px
+    );
+    pointer-events: none;
+    animation: scan-lines 8s linear infinite;
+  }
+}
+
+.game-modal__glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: $border-radius-lg;
+  background: radial-gradient(circle at 30% 30%, rgba($color-primary, 0.1), transparent 40%),
+    radial-gradient(circle at 70% 70%, rgba($color-secondary, 0.08), transparent 40%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .game-modal__status {
@@ -41,26 +75,94 @@
   font-size: 0.75rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+  position: relative;
+  z-index: 2;
 }
 
 .game-modal__title {
-  margin: 0;
+  margin: 0 0 $spacing-md;
   color: lighten($color-primary, 8%);
   font-family: $font-secondary;
   font-size: clamp(1.4rem, 3.2vw, 2rem);
+  position: relative;
+  z-index: 2;
+  text-shadow: 
+    0 0 10px rgba($color-primary, 0.6),
+    0 0 20px rgba($color-primary, 0.3);
 }
 
-.game-modal__description {
-  margin: $spacing-sm 0 $spacing-md;
-  color: lighten($color-text, 4%);
-  font-size: $font-size-small;
-  line-height: 1.7;
+.game-modal__results {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-md;
+  margin: $spacing-lg 0;
+  position: relative;
+  z-index: 2;
+}
+
+.game-modal__result-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md;
+  border: 2px solid rgba($color-primary, 0.4);
+  border-radius: $border-radius;
+  background: 
+    linear-gradient(135deg, rgba($color-primary, 0.08), rgba($color-secondary, 0.06)),
+    rgba(15, 31, 51, 0.8);
+  box-shadow: 
+    0 0 16px rgba($color-primary, 0.15),
+    inset 0 0 12px rgba($color-primary, 0.08);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 8px,
+      rgba($color-success, 0.03) 8px,
+      rgba($color-success, 0.03) 16px
+    );
+    pointer-events: none;
+    animation: shimmer 2s infinite;
+  }
+}
+
+.game-modal__result-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba($color-text, 0.6);
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+}
+
+.game-modal__result-value {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 900;
+  color: $color-success;
+  text-shadow: 
+    0 0 12px rgba($color-success, 0.7),
+    0 0 24px rgba($color-primary, 0.3),
+    0 0 4px rgba($color-success, 0.5);
+  font-family: $font-primary;
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.08em;
 }
 
 .game-modal__actions {
   display: flex;
   gap: $spacing-sm;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
 }
 
 .game-modal__button {
@@ -96,6 +198,19 @@
   box-shadow: 0 8px 18px rgba($color-primary, 0.28);
 }
 
+.game-modal__button--play {
+  color: #05131f;
+  background: linear-gradient(135deg, lighten($color-success, 12%), $color-primary);
+  box-shadow: 0 8px 18px rgba($color-primary, 0.28);
+}
+
+.game-modal__button--close {
+  color: #fff;
+  background: linear-gradient(135deg, rgba($color-text, 0.15), rgba($color-text, 0.05));
+  border-color: rgba($color-text, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 .game-modal__button--danger {
   color: #fff;
   background: linear-gradient(135deg, $color-danger, darken($color-danger, 12%));
@@ -114,9 +229,36 @@
   }
 }
 
+@keyframes scan-lines {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 @include media-sm {
   .game-modal__panel {
     padding: $spacing-md;
+  }
+
+  .game-modal__results {
+    gap: $spacing-sm;
+    margin: $spacing-md 0;
+  }
+
+  .game-modal__result-item {
+    padding: $spacing-sm;
   }
 
   .game-modal__actions {
