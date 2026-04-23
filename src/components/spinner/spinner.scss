@@ -1,0 +1,146 @@
+@use '../../theme.scss' as *;
+
+.game-spinner {
+	display: grid;
+	justify-items: center;
+	gap: $spacing-sm;
+	padding: $spacing-md;
+	text-align: center;
+}
+
+.game-spinner--fullscreen {
+	position: fixed;
+	inset: 0;
+	z-index: 9999;
+	place-content: center;
+	background:
+		radial-gradient(circle at 15% 20%, rgba($color-primary, 0.2), transparent 35%),
+		radial-gradient(circle at 85% 80%, rgba($color-secondary, 0.22), transparent 40%),
+		linear-gradient(180deg, rgba(#07121f, 0.92) 0%, rgba(#0f2338, 0.92) 45%, rgba(#081523, 0.92) 100%);
+}
+
+.game-spinner__hud {
+	position: relative;
+	width: 108px;
+	aspect-ratio: 1;
+	display: grid;
+	place-items: center;
+	filter: drop-shadow(0 0 14px rgba($color-primary, 0.45));
+}
+
+.game-spinner__ring {
+	position: absolute;
+	border-radius: 50%;
+	border-style: solid;
+	border-color: transparent;
+}
+
+.game-spinner__ring--outer {
+	inset: 0;
+	border-width: 5px;
+	border-top-color: $color-primary;
+	border-right-color: rgba($color-secondary, 0.95);
+	animation: spinner-rotate 780ms linear infinite;
+}
+
+.game-spinner__ring--inner {
+	inset: 19%;
+	border-width: 4px;
+	border-left-color: lighten($color-success, 5%);
+	border-bottom-color: rgba($color-warning, 0.92);
+	animation: spinner-rotate-reverse 600ms linear infinite;
+}
+
+.game-spinner__core {
+	width: 24px;
+	height: 24px;
+	border-radius: 6px;
+	background: linear-gradient(135deg, lighten($color-primary, 8%), $color-secondary);
+	box-shadow:
+		0 0 0 2px rgba($color-text, 0.15),
+		0 0 20px rgba($color-primary, 0.65);
+	animation: spinner-pulse 850ms ease-in-out infinite;
+}
+
+.game-spinner__spark {
+	position: absolute;
+	width: 8px;
+	height: 8px;
+	border-radius: 2px;
+	background-color: $color-warning;
+	box-shadow: 0 0 10px rgba($color-warning, 0.95);
+}
+
+.game-spinner__spark--one {
+	top: 10px;
+	right: 12px;
+	animation: spinner-flicker 420ms steps(2, end) infinite;
+}
+
+.game-spinner__spark--two {
+	bottom: 12px;
+	left: 10px;
+	animation: spinner-flicker 460ms steps(2, end) infinite reverse;
+}
+
+.game-spinner__text {
+	margin: 0;
+	color: lighten($color-primary, 8%);
+	font-family: $font-primary;
+	font-size: clamp(0.65rem, 2.3vw, 0.82rem);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.game-spinner__subtitle {
+	margin: 0;
+	color: rgba($color-text, 0.82);
+	font-family: $font-secondary;
+	font-size: clamp(0.84rem, 3vw, 0.95rem);
+}
+
+@keyframes spinner-rotate {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes spinner-rotate-reverse {
+	to {
+		transform: rotate(-360deg);
+	}
+}
+
+@keyframes spinner-pulse {
+	0%,
+	100% {
+		transform: scale(1);
+		filter: saturate(0.95);
+	}
+
+	50% {
+		transform: scale(1.2);
+		filter: saturate(1.2);
+	}
+}
+
+@keyframes spinner-flicker {
+	0%,
+	100% {
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 0.2;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.game-spinner__ring--outer,
+	.game-spinner__ring--inner,
+	.game-spinner__core,
+	.game-spinner__spark {
+		animation-duration: 0.01ms;
+		animation-iteration-count: 1;
+	}
+}

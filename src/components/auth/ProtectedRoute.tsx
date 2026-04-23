@@ -2,13 +2,14 @@ import React from 'react'
 import { useAuth } from '../../hooks/context/AuthContext';
 import AppLayout from '../layout/AppLayout';
 import { Navigate, Outlet } from 'react-router-dom';
+import Spinner from '../spinner/Spinner';
 
 const ProtectedRoute = () => {
 
     const { isAuthenticated, loading } = useAuth();
 
     if (loading) {
-        return <div>Loading...</div>
+        return <Spinner fullscreen message='Verificando acceso...' />
     }
 
 

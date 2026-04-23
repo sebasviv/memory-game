@@ -5,16 +5,18 @@ import mortySmith from '../../assets/morty-smith.svg';
 
 interface ICardProps {
     character: ICharacter;
-    isFlipped: boolean;
+    isFlipped: boolean | undefined;
     onClick: () => void;
+    disabled?: boolean;
 }
 
-const Card: React.FC<ICardProps> = ({ character, isFlipped, onClick }) => {
+const Card: React.FC<ICardProps> = ({ character, isFlipped, onClick, disabled = false }) => {
   return (
     <button
       type='button'
-      className={`game-card ${isFlipped ? 'game-card--flipped' : ''}`}
+      className={`game-card ${isFlipped ? 'game-card--flipped' : ''} ${disabled ? 'game-card--disabled' : ''}`}
       onClick={onClick}
+      disabled={disabled}
       aria-label={`Carta de ${character.name}`}
     >
       <div className='game-card__inner'>

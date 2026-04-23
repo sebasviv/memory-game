@@ -28,19 +28,17 @@ export const swapRandomCharacters = (
 ): ICharacter[] => {
   if (characters.length < 2) return characters;
 
-  const randomIndex1 = Math.floor(Math.random() * characters.length);
-  let randomIndex2 = Math.floor(Math.random() * characters.length);
-
-  while (randomIndex1 === randomIndex2) {
-    randomIndex2 = Math.floor(Math.random() * characters.length);
-  }
-
   const updatedCharacters = [...characters];
 
-  [updatedCharacters[randomIndex1], updatedCharacters[randomIndex2]] = [
-    updatedCharacters[randomIndex2],
-    updatedCharacters[randomIndex1],
-  ];
+  // Realiza una mezcla de Fisher-Yates
+  for (let i = updatedCharacters.length - 1; i > 0; i--) {
+    const randomIndex = Math.floor(Math.random() * (i + 1)); // Genera un índice aleatorio entre 0 y i
+    // Intercambia los elementos
+    [updatedCharacters[i], updatedCharacters[randomIndex]] = [
+      updatedCharacters[randomIndex],
+      updatedCharacters[i],
+    ];
+  }
 
   return updatedCharacters;
 };

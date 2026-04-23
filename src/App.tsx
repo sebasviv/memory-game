@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import './App.scss'
 import { useAuth } from './hooks/context/AuthContext'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
@@ -8,12 +7,13 @@ import NotFoundPage from './pages/NotFoundPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import HomePage from './pages/home-page/HomePage';
 import GamePage from './pages/Game/GamePage';
+import Spinner from './components/spinner/Spinner';
 
 function App() {
   const { isAuthenticated, loading } = useAuth();
 
   if(loading){
-    return <div>Loading...</div>;
+    return <Spinner fullscreen message='Conectando sesión...' />;
   }
 
   return (

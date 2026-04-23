@@ -16,6 +16,10 @@
 		transform: translateY(-2px);
 	}
 
+	&:disabled {
+		cursor: not-allowed;
+	}
+
 	&:focus-visible {
 		outline: 3px solid rgba($color-primary, 0.45);
 		outline-offset: 3px;
@@ -32,6 +36,19 @@
 	&--flipped {
 		.game-card__inner {
 			transform: rotateY(180deg);
+		}
+	}
+
+	&--disabled {
+		opacity: 0.7;
+		filter: grayscale(0.35);
+
+		&:hover {
+			transform: none;
+		}
+
+		.game-card__face {
+			box-shadow: $box-shadow;
 		}
 	}
 
