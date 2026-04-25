@@ -3,16 +3,38 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/context/AuthContext';
 import './LoginPage.scss';
 import toast from 'react-hot-toast';
+import authService from '../../services/authService';
+
 
 const LoginPage = () => {
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   if (isAuthenticated) {
     return <Navigate to="/home" replace />;
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const { token, user } = await authService.login(email, password);
+      login(user, token);
+      toast.success("Login successful!");
+      navigate("/dashboard");
+    } catch (err: any) {
+      setError(err.message || "Login failed. Please check your credentials and try again.");
+      toast.error("Failed to login.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -23,12 +45,7 @@ const LoginPage = () => {
 
         <form
           className="login-form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            login({ email });
-            toast.success('Inicio de sesión exitoso');
-            navigate('/home', { replace: true });
-          }}
+          onSubmit={handleSubmit}
         >
           <label htmlFor="email">Correo</label>
           <input

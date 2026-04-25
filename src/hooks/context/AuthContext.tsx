@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/immutability */
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, useContext, useEffect } from "react";
 
@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/immutability
         checkAuthStatus();
     }, [])
 
@@ -40,10 +39,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
-    const login = (userData: any) => {
-        const fakeToken = `fakeToken-${Math.random().toString(36).substring(2)}`;
-
-        localStorage.setItem("token", fakeToken);
+    const login = (userData: any, token: string) => {
+        localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(userData));
 
         setUser(userData);
