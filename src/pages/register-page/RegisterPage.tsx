@@ -3,17 +3,44 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/context/AuthContext';
 import './RegisterPage.scss';
 import toast from 'react-hot-toast';
+import authService from '../../services/authService';
 
 const RegisterPage = () => {
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
+  const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   if (isAuthenticated) {
     return <Navigate to="/home" replace />;
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+
+    try {
+      await authService.register(username, email, password);
+      toast.success("Registration successfully! Please Login.");
+      navigate("/login");
+    } catch (err: any) {
+      setError(err.message || "Failed to register. Please try again.");
+      toast.error(err.message || "Failed to register. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -24,13 +51,17 @@ const RegisterPage = () => {
 
         <form
           className="register-form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            login({ name, email });
-            toast.success('Registro exitoso');
-            navigate('/home', { replace: true });
-          }}
+          onSubmit={handleSubmit}
         >
+          <label htmlFor="name">Nombre de usuario</label>
+          <input
+            id="name"
+            type="text"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            placeholder="Tu nombre"
+            required
+          />
           <label htmlFor="name">Nombre</label>
           <input
             id="name"

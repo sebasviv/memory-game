@@ -27,7 +27,7 @@ const Header = () => {
       <div className="app-header__actions">
         <div className="app-header__user-info">
           <span className="app-header__label">Usuario</span>
-          <span className="app-header__email">{user?.name ?? 'Sin correo'}</span>
+          <span className="app-header__email">{user?.username ?? 'No definido'}</span>
         </div>
 
         <button type="button" className="app-header__logout" onClick={handleLogout}>
