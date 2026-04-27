@@ -2,6 +2,12 @@
 
 Aplicacion web hecha con React, TypeScript y Vite. El juego propone memorizar cartas de personajes de Rick and Morty, encontrar parejas y avanzar de ronda sumando puntos.
 
+## 🎮 Acceso a la App
+
+La aplicación está desplegada en Firebase Hosting y puedes jugar en línea aquí:
+
+👉 **[https://memory-game-b3942.web.app/](https://memory-game-b3942.web.app/)**
+
 ## Requisitos
 
 - Node.js 18 o superior
@@ -20,7 +26,13 @@ npm install
 ```env
 VITE_CHARACTERS_API_URL=https://rickandmortyapi.com/api
 VITE_LIMIT_PAGE_CHARACTERS=5
+VITE_AUTH_API=https://memory-game-back-end.vercel.app
 ```
+
+> **Nota**: 
+> - `VITE_CHARACTERS_API_URL` es la URL base de la API de Rick and Morty para cargar los personajes.
+> - `VITE_LIMIT_PAGE_CHARACTERS` define la cantidad de personajes a cargar por página desde la API.
+> - `VITE_AUTH_API` es la URL del servidor backend desplegado en Vercel, que gestiona la autenticación con MongoDB.
 
 3. Inicia el servidor de desarrollo:
 
@@ -40,6 +52,17 @@ http://localhost:5173
 - `npm run build`: genera la build de produccion.
 - `npm run preview`: sirve la build generada localmente.
 - `npm run lint`: ejecuta ESLint.
+
+## Arquitectura
+
+La aplicación utiliza una arquitectura de autenticación basada en backend:
+
+- **Frontend**: React + TypeScript + Vite (este repositorio)
+- **Backend**: Node.js desplegado en [Vercel](https://vercel.com) - `https://memory-game-back-end.vercel.app`
+- **Base de datos**: MongoDB para almacenar usuarios y datos de autenticación
+- **Autenticación**: Sistema de login/registro con validación en backend y almacenamiento seguro de sesiones
+
+El frontend se comunica con el backend para autenticar usuarios y mantener sesiones seguras.
 
 ## Como entrar al juego
 
