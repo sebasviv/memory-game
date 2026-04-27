@@ -30,7 +30,6 @@ const GamePage = () => {
     const [showNextRoundAnimation, setShowNextRoundAnimation] = React.useState<boolean>(false)
     const [isCardsBlocked, setIsCardsBlocked] = React.useState<boolean>(false)
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
-    const [spinnerMessage, setSpinnerMessage] = React.useState<string>('Cargando partida...')
     const [roundNumber, setRoundNumber] = React.useState<number>(1)
     const [showModalResults, setShowModalResults] = React.useState<boolean>(false)
 
@@ -328,7 +327,7 @@ const GamePage = () => {
             )}
 
 
-            {isLoading && <Spinner message={spinnerMessage} fullscreen />}
+            {isLoading && <Spinner message={'Cargando partida...'} fullscreen />}
             <Modal
                 isOpen={showModalResults}
                 score={score}

@@ -1,12 +1,14 @@
-import { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/context/AuthContext';
 import './RegisterPage.scss';
 import toast from 'react-hot-toast';
 import authService from '../../services/authService';
+import Spinner from '../../components/spinner/Spinner';
 
 const RegisterPage = () => {
-  const { login, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -14,7 +16,7 @@ const RegisterPage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   if (isAuthenticated) {
     return <Navigate to="/home" replace />;
@@ -29,19 +31,26 @@ const RegisterPage = () => {
     }
 
     setError("");
-    setLoading(true);
+    setIsLoading(true);
 
     try {
       await authService.register(username, email, password);
-      toast.success("Registration successfully! Please Login.");
+      toast.success("Registro exitoso! Ahora puedes iniciar sesión.");
       navigate("/login");
     } catch (err: any) {
-      setError(err.message || "Failed to register. Please try again.");
-      toast.error(err.message || "Failed to register. Please try again.");
+      setError(err.message || "Error al registrarse. Por favor, inténtalo de nuevo.");
+      toast.error(err.message || "Error al registrarse. Por favor, inténtalo de nuevo.");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    if(error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   return (
     <main className="register-page">
@@ -100,6 +109,7 @@ const RegisterPage = () => {
           ¿Ya tienes cuenta? <Link to="/">Inicia sesión</Link>
         </p>
       </section>
+      {isLoading && <Spinner message={'Cargando partida...'} fullscreen />}
     </main>
   );
 };

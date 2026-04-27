@@ -1,4 +1,3 @@
-import React from 'react'
 import { useAuth } from '../../hooks/context/AuthContext';
 import AppLayout from '../layout/AppLayout';
 import { Navigate, Outlet } from 'react-router-dom';
