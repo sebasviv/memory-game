@@ -9,6 +9,7 @@
   background: radial-gradient(ellipse at center, #0d1b2a 0%, #1a0a2e 60%, #0d1b2a 100%);
   overflow: hidden;
   position: relative;
+  padding: $spacing-lg 0;
 
   &::before {
     content: '';
